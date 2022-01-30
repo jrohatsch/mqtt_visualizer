@@ -27,7 +27,8 @@ while(last_key != ord('q')):
     topleft = window.getbegyx()
 
     window.addstr("Data: \n")
-    window.addstr(str(mqtt_storage.data) + "\n")
+    #window.addstr(str(mqtt_storage.data) + "\n")
+    window.addstr(mqtt_storage.formatted_string(mqtt_storage.data, 0))
     last_key = window.getch()
     window.refresh()
 
