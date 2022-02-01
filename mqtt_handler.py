@@ -6,6 +6,7 @@ port = 1883
 class MqttHandler:
     client = paho.Client("mqtt_visualizer")
     storage = None
+    topic = "#"
 
     def add_storage(self, storage_instance):
         self.storage = storage_instance
@@ -20,9 +21,9 @@ class MqttHandler:
         self.client.on_message = self.on_message_tree
 
     def start(self):
-        self.client.subscribe("#")
+        self.client.subscribe(self.topic)
         self.client.loop_start()
 
     def stop(self):
-        self.client.unsubscribe("#")
+        self.client.unsubscribe(self.topic)
         self.client.loop_stop()
