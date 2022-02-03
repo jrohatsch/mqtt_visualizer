@@ -12,7 +12,9 @@ class MqttHandler:
         self.storage = storage_instance
 
     def on_message_tree(self, client, userdata, message):
-        value = str(message.payload)[1:]
+        # remove '' and leading b
+        # b'True' -> True
+        value = str(message.payload)[2:-1]
 
         self.storage.add(message.topic, value)
 

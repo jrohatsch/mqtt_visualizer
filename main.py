@@ -18,26 +18,42 @@ locale.setlocale(locale.LC_ALL, '')
 # make cursor invisible
 curses.curs_set(0)
 
+pad = curses.newpad(500,50)
 # to make the screen re-render when new data arrives
-window.nodelay(True)
+pad.nodelay(True)
 
-window.scrollok(True)
+pad.scrollok(True)
+
+pad_row_position = 0
 
 last_key = -1
+resize_quit = False
+
 # main loop
 while(last_key != ord('q')):
-    window.clear()
+    pad.clear()
 
-    window.addstr("(Press 'q' to close)\n\n")
-    window.addstr("listening to topic: "+ mqtt_handler.topic +"\n")
+    pad.addstr("(Press 'q' to close)\n\n")
+    pad.addstr("listening to topic: "+ mqtt_handler.topic +"\n")
 
     try:
-        window.addstr(mqtt_storage.formatted_string(mqtt_storage.data, 0))
+        pad.addstr(mqtt_storage.formatted_string(mqtt_storage.data, 0))
     except curses.error:
         pass
     
-    window.refresh()
-    time.sleep(1)
-    last_key = window.getch()
+    try:
+        pad.refresh(pad_row_position,0,0,0,curses.LINES - 1,20)
+    except curses.error:
+        resize_quit = True
+        pad.clear()
+        break
+        
+    last_key = pad.getch()
+
+    if last_key == ord('s'):
+        pad_row_position += 5
+    elif last_key == ord('w'):
+        pad_row_position -= 5
+
 
 mqtt_handler.stop()

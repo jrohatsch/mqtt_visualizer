@@ -18,10 +18,11 @@ while(True):
         publish_string = "false"
         i = i - 1
 
-    for j in range (0,3):
-        for k in range (0,3):
+    for j in range (0,10):
+        for k in range (0,10):
             client.publish("main/sub"+str(j)+"/sub"+str(k), publish_string)    
 
+    client.publish("main/sub0/sub0","Hello")
 
     time.sleep(1)
     print("loop")
