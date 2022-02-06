@@ -1,5 +1,4 @@
 import locale
-import time
 import curses
 from storage import Storage
 from mqtt_handler import MqttHandler
@@ -29,12 +28,18 @@ pad_row_position = 0
 last_key = -1
 resize_quit = False
 
+# add top section
+top_pad = curses.newpad(4,90)
+top_pad.clear()
+    
+top_pad.addstr("(Press 'q' to close, 'w' and 's' to sroll up or down.)\n\n")
+top_pad.addstr("listening to topic: "+ mqtt_handler.topic +"\n")
+top_pad.addstr("--------------------------------------------");
+top_pad.refresh(0,0,0,0,4,90)
+
 # main loop
 while(last_key != ord('q')):
     pad.clear()
-
-    pad.addstr("(Press 'q' to close)\n\n")
-    pad.addstr("listening to topic: "+ mqtt_handler.topic +"\n")
 
     try:
         pad.addstr(mqtt_storage.formatted_string(mqtt_storage.data, 0))
@@ -42,7 +47,7 @@ while(last_key != ord('q')):
         pass
     
     try:
-        pad.refresh(pad_row_position,0,0,0,curses.LINES - 1,20)
+        pad.refresh(pad_row_position,0,4,0,curses.LINES - 1,20)
     except curses.error:
         resize_quit = True
         pad.clear()
