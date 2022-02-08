@@ -1,10 +1,11 @@
 import paho.mqtt.client as paho
 
-broker = "127.0.0.1"
 port = 1883
 
 class MqttHandler:
     client = paho.Client("mqtt_visualizer")
+    address = "127.0.0.1"
+    
     storage = None
     topic = "#"
 
@@ -19,7 +20,7 @@ class MqttHandler:
         self.storage.add(message.topic, value)
 
     def init(self):
-        self.client.connect(broker, port)
+        self.client.connect(self.address, port)
         self.client.on_message = self.on_message_tree
 
     def start(self):
