@@ -9,20 +9,23 @@ client = paho.Client("mockup_data")
 client.connect(broker, port)
 
 i = 0
+client.publish("main/sub0/sub0","Hello")
 while(True):
     publish_string = ""
+    publish_temp = 0
     if i % 2 == 0:
         publish_string = "true"
+        publish_temp = 21+i
         i = i + 1
     else:
         publish_string = "false"
+        publish_temp = 22+i
         i = i - 1
 
-    for j in range (0,10):
-        for k in range (0,10):
-            client.publish("main/sub"+str(j)+"/sub"+str(k), publish_string)    
+    for j in range (0,15):
+        client.publish("main/room"+str(j)+"/light", publish_string)    
+        client.publish("main/room"+str(j)+"/temp", publish_temp)    
 
-    client.publish("main/sub0/sub0","Hello")
 
     time.sleep(1)
     print("loop")
