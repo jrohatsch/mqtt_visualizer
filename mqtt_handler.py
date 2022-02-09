@@ -22,11 +22,8 @@ class MqttHandler:
     def init(self):
         self.client.connect(self.address, port)
         self.client.on_message = self.on_message_tree
-
-    def start(self):
         self.client.subscribe(self.topic)
-        self.client.loop_start()
 
-    def stop(self):
+    def destroy(self):
         self.client.unsubscribe(self.topic)
-        self.client.loop_stop()
+        self.client.disconnect()

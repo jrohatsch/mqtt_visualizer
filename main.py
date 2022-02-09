@@ -25,8 +25,6 @@ if args.topic != None:
     mqtt_handler.topic = args.topic
 
 mqtt_handler.init()
-mqtt_handler.start()
-
 window = curses.initscr()
 locale.setlocale(locale.LC_ALL, '')
 
@@ -40,7 +38,6 @@ pad.nodelay(True)
 pad.scrollok(True)
 
 pad_row_position = 0
-
 last_key = -1
 resize_quit = False
 
@@ -56,17 +53,13 @@ top_pad.refresh(0,0,0,0,4, curses.COLS - 1)
 # main loop
 while(last_key != ord('q')):
     pad.clear()
+    mqtt_handler.client.loop_read()
+
+    pad.addstr(mqtt_storage.formatted_string(mqtt_storage.data, 0))
 
     try:
-        pad.addstr(mqtt_storage.formatted_string(mqtt_storage.data, 0))
+        pad.refresh(pad_row_position, 0, 4, 0, curses.LINES - 1, curses.COLS - 1)
     except curses.error:
-        pass
-    
-    try:
-        pad.refresh(pad_row_position,0,4,0,curses.LINES - 1, curses.COLS - 1)
-    except curses.error:
-        resize_quit = True
-        pad.clear()
         break
         
     last_key = pad.getch()
@@ -76,5 +69,7 @@ while(last_key != ord('q')):
     elif last_key == ord('w'):
         pad_row_position -= 5
 
-
-mqtt_handler.stop()
+# after main loop on quit or error
+curses.endwin()
+print("program exited")
+mqtt_handler.destroy()

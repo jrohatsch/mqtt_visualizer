@@ -22,9 +22,12 @@ while(True):
         publish_temp = 22+i
         i = i - 1
 
-    for j in range (0,15):
+    for j in range (0,20):
         client.publish("main/room"+str(j)+"/light", publish_string)    
-        client.publish("main/room"+str(j)+"/temp", publish_temp)    
+        client.publish("main/room"+str(j)+"/temp", publish_temp)
+
+        for k in range(0,3):
+            client.publish("main/room"+str(j)+"/devices/device"+str(k), publish_temp) 
 
 
     time.sleep(1)

@@ -31,7 +31,7 @@ class Storage():
                 buffer += "\n"
                 #buffer += "level"+str(level)+"\n"
                 for i in range(level):
-                    buffer += " "
+                    buffer += "  "
 
                 buffer += key
                 buffer += self.formatted_string(data.get(key), level + 1)
