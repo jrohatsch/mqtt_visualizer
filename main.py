@@ -45,10 +45,10 @@ top_pad.addstr("listening to topic: "+ mqtt_handler.topic +"\n")
 top_pad.addstr("--------------------------------------------");
 top_pad.refresh(0,0,0,0,4, curses.COLS - 1)
 
+mqtt_handler.client.loop_start()
 # main loop
 while(last_key != ord('q')):
     pad.clear()
-    mqtt_handler.client.loop_read()
 
     pad.addstr(mqtt_storage.formatted_string(mqtt_storage.data, 0))
     pad.addstr("\n\n--------------------------------------------")
@@ -66,6 +66,7 @@ while(last_key != ord('q')):
         pad_row_position -= 5
 
 # after main loop on quit or error
+mqtt_handler.client.loop_stop()
 curses.endwin()
 print("program exited")
 mqtt_handler.destroy()
