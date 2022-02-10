@@ -1,9 +1,10 @@
 import paho.mqtt.client as paho
+import time
 
 port = 1883
-
+client_id = "mqtt_visualizer"+ str(time.gmtime())
 class MqttHandler:
-    client = paho.Client("mqtt_visualizer")
+    client = paho.Client(client_id)
     address = "127.0.0.1"
     
     storage = None

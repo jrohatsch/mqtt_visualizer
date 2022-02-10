@@ -1,17 +1,12 @@
 import locale
 import curses
-import argparse
 from storage import Storage
 from mqtt_handler import MqttHandler
+import arguments
 
 
 # read arguments
-parser = argparse.ArgumentParser(description='Connection Details')
-
-parser.add_argument('-a',dest='address',help='The ip address to which the mqtt_visualizer should connect', type=str)
-parser.add_argument('-t',dest='topic', help='the mqtt topic which should be observed', type=str)
-
-args = parser.parse_args()
+args = arguments.get()
 
 
 mqtt_storage = Storage()
@@ -56,6 +51,7 @@ while(last_key != ord('q')):
     mqtt_handler.client.loop_read()
 
     pad.addstr(mqtt_storage.formatted_string(mqtt_storage.data, 0))
+    pad.addstr("\n\n--------------------------------------------")
 
     try:
         pad.refresh(pad_row_position, 0, 4, 0, curses.LINES - 1, curses.COLS - 1)

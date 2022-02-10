@@ -29,7 +29,6 @@ class Storage():
             keys = data.keys()
             for key in keys:
                 buffer += "\n"
-                #buffer += "level"+str(level)+"\n"
                 for i in range(level):
                     buffer += "  "
 
