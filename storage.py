@@ -16,6 +16,10 @@ class Storage():
             # create sub dictionary if it not exists
             if not path in help:
                 help[path] = {}
+            elif type(help[path]) != dict:
+                print("Warning: creating dictionary on topic with value")
+                copy = help[path]
+                help[path] = {"previous_data": copy}
 
             help = help[path]
 
