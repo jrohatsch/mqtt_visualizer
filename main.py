@@ -48,7 +48,7 @@ top_pad.refresh(0,0,0,0,4, curses.COLS - 1)
 mqtt_handler.client.loop_start()
 # main loop
 while(last_key != ord('q')):
-    pad.clear()
+    pad.erase()
 
     pad.addstr(mqtt_storage.formatted_string(mqtt_storage.data, 0))
     pad.addstr("\n\n--------------------------------------------")
