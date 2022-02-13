@@ -1,46 +1,45 @@
 from xml.dom.expatbuilder import parseString
 
 
+
 class Storage():
-    data = {}
+    data = {"value": "", "sub_topics": {}}
 
     def add(self, path, value):
         path_array = str(path).split("/")
 
         # helper referece to iterate the data dictionary
-        help = self.data
+        help = self.data["sub_topics"]
 
-        for i in range(len(path_array) - 1):
-            path = path_array[i]
-
-            # create sub dictionary if it not exists
+        i = 0
+        for path in path_array:
+            # create empty dictionary
             if not path in help:
-                help[path] = {}
-            elif type(help[path]) != dict:
-                print("Warning: creating dictionary on topic with value")
-                copy = help[path]
-                help[path] = {"previous_data": copy}
+                help[path] = {"value": "", "sub_topics": {}}
+            
+            # set value
+            if(i == len(path_array) - 1):
+                help[path]["value"] = value
 
-            help = help[path]
+            help = help[path]["sub_topics"]
+            i = i + 1
 
-        # add value at deepest level
-        help[path_array[len(path_array) - 1]] = value
+                
 
     def formatted_string(self, data, level):
         buffer = ""
 
-        try:
-            keys = data.keys()
-            for key in keys:
-                buffer += "\n"
-                for i in range(level):
-                    buffer += "  "
+        if(data.get("value") != ""):
+            buffer += " = " + data.get("value")
+        
 
-                buffer += key
-                buffer += self.formatted_string(data.get(key), level + 1)
-        except AttributeError:
-            # at deepest level. data is not a dictionary
-            buffer += " = "
-            buffer += data
+        for key, value in data.get("sub_topics").items():
+            buffer += "\n"
+            
+            for i in range(level):
+                buffer += "  "
+
+            buffer += key
+            buffer += self.formatted_string(value, level + 1)
 
         return buffer
