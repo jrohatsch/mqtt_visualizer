@@ -1,5 +1,4 @@
-from xml.dom.expatbuilder import parseString
-
+import curses
 
 
 class Storage():
@@ -25,7 +24,6 @@ class Storage():
             i = i + 1
 
                 
-
     def formatted_string(self, data, level):
         buffer = ""
 
@@ -43,3 +41,19 @@ class Storage():
             buffer += self.formatted_string(value, level + 1)
 
         return buffer
+
+    def render_formatted_string(self, render_func, data, level):
+        if(data.get("value") != ""):
+            render_func(" = ", curses.A_BOLD)
+            render_func(data.get("value"))
+        
+
+        for key, value in data.get("sub_topics").items():
+            render_func("\n")
+            
+            for i in range(level):
+                render_func("  ")
+
+            render_func(key, curses.A_BOLD)
+            self.render_formatted_string(render_func, value, level + 1)
+

@@ -30,5 +30,5 @@ while(True):
             client.publish("main/room"+str(j)+"/devices/device"+str(k), publish_temp) 
 
 
-    time.sleep(0.5)
+    time.sleep(1)
     print("loop")

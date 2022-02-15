@@ -33,7 +33,7 @@ def main():
     # make cursor invisible
     curses.curs_set(0)
 
-    pad = curses.newpad(500,90)
+    pad = curses.newpad(10000, curses.COLS - 1)
     # to make the screen re-render when new data arrives
     pad.nodelay(True)
 
@@ -41,15 +41,14 @@ def main():
 
     pad_row_position = 0
     last_key = -1
-    resize_quit = False
 
     # add top section
-    top_pad = curses.newpad(4,90)
+    top_pad = curses.newpad(4, curses.COLS - 1)
     top_pad.clear()
         
-    top_pad.addstr("(Press 'q' to close, 'w' and 's' to sroll up or down.)\n\n")
-    top_pad.addstr("listening to topic: "+ mqtt_handler.topic +"\n")
-    top_pad.addstr("--------------------------------------------");
+    top_pad.addstr("(Press 'q' to close, 'w' and 's' to sroll up or down.)\n\n", curses.A_STANDOUT)
+    top_pad.addstr("listening to topic: "+ mqtt_handler.topic +"\n", curses.A_BOLD)
+    top_pad.addstr("--------------------------------------------",curses.A_BOLD);
     top_pad.refresh(0,0,0,0,4, curses.COLS - 1)
 
     mqtt_handler.client.loop_start()
@@ -57,8 +56,9 @@ def main():
     while(last_key != ord('q')):
         pad.erase()
 
-        pad.addstr(mqtt_storage.formatted_string(mqtt_storage.data, 0))
-        pad.addstr("\n\n--------------------------------------------")
+        #pad.addstr(mqtt_storage.formatted_string(mqtt_storage.data, 0))
+        mqtt_storage.render_formatted_string(pad.addstr, mqtt_storage.data, 0)
+        pad.addstr("\n\n--------------------------------------------", curses.A_BOLD)
 
         try:
             pad.refresh(pad_row_position, 0, 4, 0, curses.LINES - 1, curses.COLS - 1)
