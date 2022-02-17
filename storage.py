@@ -42,7 +42,7 @@ class Storage():
 
         return buffer
 
-    def render_formatted_string(self, render_func, data, level):
+    def render_formatted_string(self, render_func, data, level = 0):
         if(data.get("value") != ""):
             render_func(" = ", curses.A_BOLD)
             render_func(data.get("value"))

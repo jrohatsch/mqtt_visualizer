@@ -56,7 +56,7 @@ def main():
     while(last_key != ord('q')):
         pad.erase()
 
-        mqtt_storage.render_formatted_string(pad.addstr, mqtt_storage.data, 0)
+        mqtt_storage.render_formatted_string(pad.addstr, mqtt_storage.data)
         pad.addstr("\n\n--------------------------------------------", curses.A_BOLD)
 
         try:

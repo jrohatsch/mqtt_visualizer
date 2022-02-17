@@ -1,7 +1,7 @@
 import paho.mqtt.client as paho
 import time
 
-client_id = "mqtt_visualizer"+ str(time.gmtime())
+client_id = "mqtt_visualizer_"+ str(time.time())
 
 class MqttHandler:
     client = paho.Client(client_id)
