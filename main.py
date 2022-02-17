@@ -56,7 +56,6 @@ def main():
     while(last_key != ord('q')):
         pad.erase()
 
-        #pad.addstr(mqtt_storage.formatted_string(mqtt_storage.data, 0))
         mqtt_storage.render_formatted_string(pad.addstr, mqtt_storage.data, 0)
         pad.addstr("\n\n--------------------------------------------", curses.A_BOLD)
 
@@ -68,9 +67,16 @@ def main():
         last_key = pad.getch()
 
         if last_key == ord('s'):
-            pad_row_position += 5
+            if (pad_row_position <= 9995):
+                pad_row_position += 5
+            else:
+                pad_row_position = 10000
         elif last_key == ord('w'):
-            pad_row_position -= 5
+            if (pad_row_position >= 5):
+                pad_row_position -= 5
+            else:
+                pad_row_position = 0
+
 
     # after main loop on quit or error
     mqtt_handler.client.loop_stop()

@@ -46,9 +46,11 @@ class Storage():
         if(data.get("value") != ""):
             render_func(" = ", curses.A_BOLD)
             render_func(data.get("value"))
-        
 
-        for key, value in data.get("sub_topics").items():
+        # copy list before iteration
+        items = list(data.get("sub_topics").items())
+        
+        for key, value in items:
             render_func("\n")
             
             for i in range(level):
