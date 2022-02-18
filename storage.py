@@ -4,7 +4,7 @@ import curses
 class Storage():
     data = {"value": "", "sub_topics": {}}
 
-    def add(self, path, value):
+    def add(self, path: str, value: str):
         path_array = str(path).split("/")
 
         # helper referece to iterate the data dictionary
@@ -24,7 +24,7 @@ class Storage():
             i = i + 1
 
                 
-    def formatted_string(self, data, level):
+    def formatted_string(self, data, level = 0):
         buffer = ""
 
         if(data.get("value") != ""):
