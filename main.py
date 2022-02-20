@@ -5,6 +5,7 @@ from mqtt_handler import MqttHandler
 from print_file import print_string
 from error_handler import *
 import arguments
+import time
 
 def render_top_pad(top_pad, print_status, mqtt_handler):
     top_pad.erase()
@@ -64,6 +65,7 @@ def main():
     
     # main loop
     while(last_key != ord('q')):
+        time.sleep(0.0333)
         pad.erase()
 
         mqtt_storage.render_formatted_string(pad.addstr, mqtt_storage.data)
@@ -90,6 +92,8 @@ def main():
         elif last_key == ord('p'):
             print_status = print_string(mqtt_storage.formatted_string(mqtt_storage.data))
             render_top_pad(top_pad, print_status, mqtt_handler)
+        
+        #time.sleep(0.05)
 
 
     mqtt_handler.client.loop_stop()

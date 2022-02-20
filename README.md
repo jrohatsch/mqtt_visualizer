@@ -13,6 +13,14 @@ Install following modules
 
 ```pip3 install paho-mqtt```
 
+### Windows
+
+Use python up to version 3.10.2
+
+Install following modules
+
+```pip3 install paho-mqtt windows-curses```
+
 
 ## Arguments
 
