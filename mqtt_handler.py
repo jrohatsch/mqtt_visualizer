@@ -1,5 +1,6 @@
 import paho.mqtt.client as paho
 import time
+from error_handler import *
 
 client_id = "mqtt_visualizer_"+ str(time.time())
 
@@ -22,8 +23,8 @@ class MqttHandler:
         self.storage.add(message.topic, value)
 
     def failed_connect(self):
-        print("Could not connect to " + self.address + ":" + str(self.port))
-        print("\nPlease ensure a mqtt broker is running.")
+        save_error("Could not connect to " + self.address + ":" + str(self.port))
+        save_error("Please ensure a mqtt broker is running.")
 
     def init(self):
         try:

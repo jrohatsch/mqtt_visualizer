@@ -2,7 +2,19 @@ import locale
 import curses
 from storage import Storage
 from mqtt_handler import MqttHandler
+from print_file import print_string
+from error_handler import *
 import arguments
+
+def render_top_pad(top_pad, print_status, mqtt_handler):
+    top_pad.erase()
+        
+    top_pad.addstr("Press 'q' to close, 'w' and 's' to sroll up or down.\n", curses.A_STANDOUT)
+    top_pad.addstr("Press 'p' to print to file. " + print_status +"\n\n", curses.A_STANDOUT)
+    top_pad.addstr("connected to: " + mqtt_handler.address + ":" + str(mqtt_handler.port) + "\n", curses.A_BOLD)
+    top_pad.addstr("listening to topic: "+ mqtt_handler.topic +"\n", curses.A_BOLD)
+    top_pad.addstr("--------------------------------------------",curses.A_BOLD);
+    top_pad.refresh(0,0,0,0,6, curses.COLS - 1)
 
 
 def main():
@@ -42,16 +54,14 @@ def main():
     pad_row_position = 0
     last_key = -1
 
+    print_status = ""
+
     # add top section
-    top_pad = curses.newpad(4, curses.COLS - 1)
-    top_pad.clear()
-        
-    top_pad.addstr("(Press 'q' to close, 'w' and 's' to sroll up or down.)\n\n", curses.A_STANDOUT)
-    top_pad.addstr("listening to topic: "+ mqtt_handler.topic +"\n", curses.A_BOLD)
-    top_pad.addstr("--------------------------------------------",curses.A_BOLD);
-    top_pad.refresh(0,0,0,0,4, curses.COLS - 1)
+    top_pad = curses.newpad(7, curses.COLS - 1)
+    render_top_pad(top_pad, print_status, mqtt_handler)
 
     mqtt_handler.client.loop_start()
+    
     # main loop
     while(last_key != ord('q')):
         pad.erase()
@@ -60,8 +70,9 @@ def main():
         pad.addstr("\n\n--------------------------------------------", curses.A_BOLD)
 
         try:
-            pad.refresh(pad_row_position, 0, 4, 0, curses.LINES - 1, curses.COLS - 1)
-        except curses.error:
+            pad.refresh(pad_row_position, 0, 6, 0, curses.LINES - 1, curses.COLS - 1)
+        except Exception as e:
+            save_error(e)
             break
             
         last_key = pad.getch()
@@ -76,12 +87,17 @@ def main():
                 pad_row_position -= 5
             else:
                 pad_row_position = 0
+        elif last_key == ord('p'):
+            print_status = print_string(mqtt_storage.formatted_string(mqtt_storage.data))
+            render_top_pad(top_pad, print_status, mqtt_handler)
 
 
-    # after main loop on quit or error
     mqtt_handler.client.loop_stop()
-    curses.endwin()
-    print("program exited")
     mqtt_handler.destroy()
+    curses.endwin()
+
 
 main()
+# after main loop on quit or error
+print_errors()
+print("program existed")
