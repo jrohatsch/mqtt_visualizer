@@ -9,8 +9,8 @@ class MqttHandler:
     port = 1883
     address = "127.0.0.1"
     topic = "#"
-    
     storage = None
+    update_screen = None
 
     def add_storage(self, storage_instance):
         self.storage = storage_instance
@@ -21,6 +21,9 @@ class MqttHandler:
         value = str(message.payload)[2:-1]
 
         self.storage.add(message.topic, value)
+        
+        if(self.update_screen != None):
+            self.update_screen()
 
     def failed_connect(self):
         save_error("Could not connect to " + self.address + ":" + str(self.port))
