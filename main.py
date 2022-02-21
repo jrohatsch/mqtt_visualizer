@@ -73,17 +73,14 @@ def main():
     # start mqtt handling in separate thread
     # to ensure screen is only updated when
     # new data arrives
-    mqtt_handler.client.loop_start()
+    mqtt_handler.start_handling()
     
-    # curses loop:
+    # key press loop:
     # wait for user input and update screen
-    # after recieving an input
     while(last_key != ord('q')):
         update_screen()
-            
-        # this function is blocking
-        last_key = pad.getch()
 
+        last_key = pad.getch()
         if last_key == ord('s'):
             if (pad_row_position <= 9995):
                 pad_row_position += 5
@@ -97,9 +94,10 @@ def main():
         elif last_key == ord('p'):
             print_status = print_string(mqtt_storage.formatted_string(mqtt_storage.data))
             render_top_pad(top_pad, print_status, mqtt_handler)
-        
-
-    mqtt_handler.client.loop_stop()
+    
+    top_pad.clear()
+    pad.clear()
+    mqtt_handler.stop_handling()
     mqtt_handler.destroy()
     curses.endwin()
 
