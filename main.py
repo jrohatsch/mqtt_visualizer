@@ -94,13 +94,18 @@ def main():
         elif last_key == ord('p'):
             print_status = print_string(mqtt_storage.formatted_string(mqtt_storage.data))
             render_top_pad(top_pad, print_status, mqtt_handler)
+        elif last_key == ord('l'):
+            mqtt_storage.update_selection("into_tree")
+        elif last_key == ord('k'):
+            mqtt_storage.update_selection("down")
+        elif last_key == ord('j'):
+            mqtt_storage.update_selection("to_parent")
     
     top_pad.clear()
     pad.clear()
     mqtt_handler.stop_handling()
     mqtt_handler.destroy()
     curses.endwin()
-
 
 
 main()
