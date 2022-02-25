@@ -1,15 +1,18 @@
 import curses
-from re import I
-
 
 class Storage():
-    data = {"value": "", "sub_topics": {}, "show_sub_topics": True, "selected": False, "parent_pointer": None, "path": "#"}
+    data = {
+        "value": "", 
+        "sub_topics": {}, 
+        "show_sub_topics": True, 
+        "selected": False, 
+        "parent_ref": None, 
+        "path": "#"
+    }
     ref_selected_topic = None
 
-
-
-    def add(self, path: str, value: str):
-        path_array = str(path).split("/")
+    def add(self, full_path: str, value: str):
+        path_array = str(full_path).split("/")
 
         # helper referece to iterate the data dictionary
         parent = self.data
@@ -17,9 +20,23 @@ class Storage():
 
         i = 0
         for path in path_array:
+
+            # create subpath to topic
+            sub_path = ""
+            for j in range (i + 1):
+                sub_path += path_array[j]
+                sub_path += "/"
+
             # create empty dictionary
             if not path in help:
-                help[path] = {"value": "", "sub_topics": {}, "show_sub_topics": False, "selected": False, "parent_ref": parent, "path": path}
+                help[path] = {
+                    "value": "", 
+                    "sub_topics": {}, 
+                    "show_sub_topics": False, 
+                    "selected": False, 
+                    "parent_ref": parent, 
+                    "path": sub_path
+                }
             
             # set value
             if(i == len(path_array) - 1):
@@ -33,7 +50,6 @@ class Storage():
         if (self.ref_selected_topic == None):
             self.data["sub_topics"][path_array[0]]["selected"] = True
             self.ref_selected_topic = self.data["sub_topics"][path_array[0]]
-            self.ref_selected_topic_parent = self.data
 
                 
     def formatted_string(self, data, level = 0):
@@ -84,12 +100,18 @@ class Storage():
 
         if(selected_topic != None):
             selected_topic["show_sub_topics"] = True
+    
+    def collapse(self):
+        selected_topic = self.ref_selected_topic
+
+        if(selected_topic != None):
+            selected_topic["show_sub_topics"] = False
 
     def __set_selection_to_first_child(self):
         selected_topic = self.ref_selected_topic
 
         # ensure sub_topics are shown
-        if(selected_topic.get("show_sub_topics") == True):
+        if(selected_topic.get("show_sub_topics") == True and len(selected_topic.get("sub_topics")) > 0):
             selected_topic["selected"] = False
 
             sub_topics = list(selected_topic.get("sub_topics").values())
@@ -97,7 +119,7 @@ class Storage():
             sub_topics[0]["selected"] = True
             self.ref_selected_topic = sub_topics[0]
 
-    def __set_selection_to_sister(self):
+    def __set_selection_to_sister(self, delta):
         selected_topic = self.ref_selected_topic
 
         parent = selected_topic.get("parent_ref")
@@ -113,11 +135,17 @@ class Storage():
             i = i + 1 
         
 
-        sister_index = selected_topic_index + 1
+        sister_index = selected_topic_index + delta
 
-        # check if index is at end
-        if(selected_topic_index == len(sub_topics) - 1):
-            sister_index = 0
+        if delta > 0:
+            # check if index is at end
+            if(selected_topic_index == len(sub_topics) - 1):
+                sister_index = 0
+        else:
+            # check if index is at start
+            if(selected_topic_index == 0):
+                sister_index = len(sub_topics) - 1
+            
 
         sister = sub_topics[sister_index]
 
@@ -129,20 +157,27 @@ class Storage():
         selected_topic = self.ref_selected_topic
         parent = selected_topic.get("parent_ref")
 
-        selected_topic["selected"] = False
-        parent["selected"] = True
-        self.ref_selected_topic = parent
+        if(parent.get("path") != "#"):
+            selected_topic["selected"] = False
+            parent["selected"] = True
+            self.ref_selected_topic = parent
         
     def update_selection(self, direction):
-        #print("update_selection " + direction)
-
         if (direction == "into_tree"):
             self.expand()
             self.__set_selection_to_first_child()
         elif (direction == "down"):
-            self.__set_selection_to_sister()
+            self.__set_selection_to_sister(1)
+        elif (direction == "up"):
+            self.__set_selection_to_sister(-1)
         elif (direction == "to_parent"):
             self.__set_selection_to_parent()
+
+    def get_selected(self):
+        if(self.ref_selected_topic == None):
+            return ""
+        else:
+            return self.ref_selected_topic.get("path")
 
 
 
