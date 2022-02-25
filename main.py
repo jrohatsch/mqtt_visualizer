@@ -107,4 +107,4 @@ main()
 
 # after main loop on quit or error
 print_errors()
-print("program existed")
+print("program exited")
