@@ -74,7 +74,10 @@ class Storage():
         if(data.get("value") != ""):
             render_func(" = ", curses.A_BOLD)
             render_func(data.get("value"))
-
+        
+        # check if data has sub_topics
+        if (len(data.get("sub_topics")) > 0 and data.get("show_sub_topics") == False):
+            render_func(" [+]")
 
         if(data.get("show_sub_topics") == True):
             # copy list before iteration
