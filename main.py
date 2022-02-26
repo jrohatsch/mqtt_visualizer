@@ -13,7 +13,7 @@ def render_top_pad(top_pad, print_status, mqtt_handler, mqtt_storage):
     top_pad.addstr("Press 'q' to close, 'w' and 's' to move selection up and down.\n", curses.A_STANDOUT)
     top_pad.addstr("Press 'a' to move selection to parent topic. Press 'd' to open sub topics.\n", curses.A_STANDOUT)
     top_pad.addstr("Press 'c' to collapse topic trees. \n", curses.A_STANDOUT)
-    top_pad.addstr("Press 'i' and 'k' to scroll the screen up and down " + print_status +"\n", curses.A_STANDOUT)
+    top_pad.addstr("Press 'i' and 'k' to scroll the screen up and down\n", curses.A_STANDOUT)
     top_pad.addstr("Press 'p' to print to file. " + print_status +"\n", curses.A_STANDOUT)
     top_pad.addstr("connected to: " + mqtt_handler.address + ":" + str(mqtt_handler.port) + "\n", curses.A_BOLD)
     top_pad.addstr("selected topic: "+ mqtt_storage.get_selected() +"\n", curses.A_BOLD)
@@ -82,8 +82,15 @@ def main():
     # wait for user input and update screen
     while(last_key != ord('q')):
         update_screen()
+        # after processing key press, resume updates on new data
+        mqtt_handler.resume_screen_update()
 
+        # wait for key press
         last_key = pad.getch()
+
+        # while processing key press, pause updates on new data
+        mqtt_handler.pause_screen_update()
+
         if last_key == ord('k'):
             if (pad_row_position <= 9995):
                 pad_row_position += 5

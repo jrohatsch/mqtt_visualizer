@@ -15,6 +15,13 @@ class MqttHandler:
     should_update = False
     render_thread = None
     should_loop = False
+    pause = True
+
+    def pause_screen_update(self):
+        self.pause = True
+    
+    def resume_screen_update(self):
+        self.pause = False
 
     def start_handling(self):
         self.client.loop_start()
@@ -35,7 +42,7 @@ class MqttHandler:
         while(self.should_loop == True):
             time.sleep(1)
 
-            if(self.should_update):
+            if(self.should_update and self.pause == False):
                 self.update_screen()
                 self.should_update = False
 
