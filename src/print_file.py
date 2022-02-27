@@ -1,6 +1,6 @@
 import datetime 
 import os.path
-from error_handler import *
+from src.error_handler import *
 
 # save errors for after quitting
 

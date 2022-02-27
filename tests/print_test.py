@@ -6,8 +6,8 @@ dir = os.path.abspath('.')
 sys.path.append(dir)
 
 
-from storage import Storage
-import print_file
+from src.storage import Storage
+import src.print_file as print_file
 
 test_storage = Storage()
 

@@ -1,6 +1,6 @@
 import paho.mqtt.client as paho
 import time
-from error_handler import *
+from src.error_handler import *
 import threading
 
 client_id = "mqtt_visualizer_"+ str(time.time())

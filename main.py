@@ -1,24 +1,11 @@
 import locale
 import curses
-from storage import Storage
-from mqtt_handler import MqttHandler
-from print_file import print_string
-from error_handler import *
-import arguments
-import time
-
-def render_top_pad(top_pad, print_status, mqtt_handler, mqtt_storage):
-    top_pad.erase()
-        
-    top_pad.addstr("Press 'q' to close, 'w' and 's' to move selection up and down.\n", curses.A_STANDOUT)
-    top_pad.addstr("Press 'a' to move selection to parent topic. Press 'd' to open sub topics.\n", curses.A_STANDOUT)
-    top_pad.addstr("Press 'c' to collapse topic trees.\n", curses.A_STANDOUT)
-    top_pad.addstr("Press 'i' and 'k' to scroll the screen up and down.\n", curses.A_STANDOUT)
-    top_pad.addstr("Press 'p' to print to file." + print_status +"\n", curses.A_STANDOUT)
-    top_pad.addstr("connected to: " + mqtt_handler.address + ":" + str(mqtt_handler.port) + "\n", curses.A_BOLD)
-    top_pad.addstr("selected topic: "+ mqtt_storage.get_selected() +"\n", curses.A_BOLD)
-    top_pad.addstr("--------------------------------------------",curses.A_BOLD);
-    top_pad.refresh(0,0,0,0,8, curses.COLS - 1)
+from src.storage import Storage
+from src.mqtt_handler import MqttHandler
+from src.print_file import print_string
+from src.error_handler import *
+import src.arguments as arguments
+from src.render import *
 
 
 def main():
@@ -58,17 +45,11 @@ def main():
 
     # add top section
     top_pad = curses.newpad(8, curses.COLS - 1)
-    render_top_pad(top_pad, print_status, mqtt_handler, mqtt_storage)
+    update_info_box(top_pad, print_status, mqtt_handler, mqtt_storage)
 
+    # pass update function to mqtt handler
     def update_screen():
-        pad.erase()
-        mqtt_storage.render_formatted_string(pad.addstr, mqtt_storage.data)
-        pad.addstr("\n\n--------------------------------------------", curses.A_BOLD)
-
-        try:
-            pad.refresh(pad_row_position, 0, 8, 0, curses.LINES - 1, curses.COLS - 1)
-        except Exception as e:
-            save_error(e)
+        update_content_box(pad, mqtt_storage, pad_row_position)
     
     mqtt_handler.update_screen = update_screen
 
@@ -79,7 +60,7 @@ def main():
     mqtt_handler.start_handling()
     
     # key press loop:
-    # wait for user input and update screen
+    # wait for user input and update the screen
     while(last_key != ord('q')):
         update_screen()
         # after processing key press, resume updates on new data
@@ -103,21 +84,21 @@ def main():
                 pad_row_position = 0
         elif last_key == ord('p'):
             print_status = print_string(mqtt_storage.formatted_string(mqtt_storage.data))
-            render_top_pad(top_pad, print_status, mqtt_handler, mqtt_storage)
+            update_info_box(top_pad, print_status, mqtt_handler, mqtt_storage)
         elif last_key == ord('d'):
-            mqtt_storage.update_selection("into_tree")
-            render_top_pad(top_pad, print_status, mqtt_handler, mqtt_storage)
+            mqtt_storage.selection_handler.update_selection("into_tree")
+            update_info_box(top_pad, print_status, mqtt_handler, mqtt_storage)
         elif last_key == ord('s'):
-            mqtt_storage.update_selection("down")
-            render_top_pad(top_pad, print_status, mqtt_handler, mqtt_storage)
+            mqtt_storage.selection_handler.update_selection("down")
+            update_info_box(top_pad, print_status, mqtt_handler, mqtt_storage)
         elif last_key == ord('a'):
-            mqtt_storage.update_selection("to_parent")
-            render_top_pad(top_pad, print_status, mqtt_handler, mqtt_storage)
+            mqtt_storage.selection_handler.update_selection("to_parent")
+            update_info_box(top_pad, print_status, mqtt_handler, mqtt_storage)
         elif last_key == ord('w'):
-            mqtt_storage.update_selection("up")
-            render_top_pad(top_pad, print_status, mqtt_handler, mqtt_storage)
+            mqtt_storage.selection_handler.update_selection("up")
+            update_info_box(top_pad, print_status, mqtt_handler, mqtt_storage)
         elif last_key == ord('c'):
-            mqtt_storage.collapse()
+            mqtt_storage.selection_handler.collapse()
 
     
     top_pad.clear()
