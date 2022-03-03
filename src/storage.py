@@ -1,7 +1,6 @@
 import curses
-from src.error_handler import save_error
 from src.selection import SelectionHandler
-
+from src.deletion_handler import remove_dead_entries
 
 class Storage():
     data = {
@@ -56,12 +55,6 @@ class Storage():
             self.selection_handler.set_selected_ref(
                 self.data["sub_topics"][path_array[0]])
 
-    def check_dead_entry(self, entry: dict):
-        if entry.get("value") == "" and len(entry.get("sub_topics")) == 0:
-            return True
-        else:
-            return False
-
     def delete(self, full_path: str):
         # find data
         path_array = str(full_path).split("/")
@@ -94,33 +87,7 @@ class Storage():
             # remove complete entry
             help.get("sub_topics").pop(path_array[len(path_array) - 1])
 
-            self.remove_dead_entries(help, path_array, 2)
-
-
-    def remove_dead_entries(self, data: dict, path_array: list, index: int):
-        if index == len(path_array):
-            return
-
-        # check if entry has no sub_topics any more
-        if len(data.get("sub_topics")) == 0:
-            # check if entry has no value
-            if data.get("value") == "":
-                # save ref of parent
-                parent = data.get("parent_ref")
-
-                if parent != None:
-                    # if the dead entry was selected
-                    # set selection to parent entry
-                    if data.get("selected") == True:
-                        self.selection_handler.set_selection_to_parent()
-
-                    # remove dead entry
-                    parent.get("sub_topics").pop(path_array[len(path_array) - index])
-                    # repeat for parent  entry
-                    self.remove_dead_entries(parent, path_array, index + 1)
-
-        
-
+            remove_dead_entries(help, path_array[:-1], self.selection_handler)
 
 
     def formatted_string(self, data, level = 0):
