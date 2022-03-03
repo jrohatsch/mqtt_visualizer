@@ -1,7 +1,7 @@
 # mqtt_visualizer
 Visualize MQTT data traffic in a terminal.
 
-![](images/demo.gif)
+![](https://github.com/jrohatsch/media_store/blob/master/mqtt_demo.gif)
 
 ## Installation
 
