@@ -54,7 +54,10 @@ class MqttHandler:
         # b'True' -> True
         value = str(message.payload)[2:-1]
 
-        self.storage.add(message.topic, value)
+        if value == "":
+            self.storage.delete(message.topic)
+        else:
+            self.storage.add(message.topic, value)
         
         self.should_update = True
 

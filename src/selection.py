@@ -82,6 +82,8 @@ class SelectionHandler():
 
 
     def update_selection(self, direction):
+        if self.__ref_selected_topic == None:
+            return
         if (direction == "into_tree"):
             self.expand()
             self.set_selection_to_first_child()
