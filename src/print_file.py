@@ -24,7 +24,7 @@ def print_string(data):
     exists = os.path.exists(file_name)
 
     if (exists and success):
-        return " written -->  " + file_name
+        return "-> " + file_name
     else:
         return " print failed"
 
