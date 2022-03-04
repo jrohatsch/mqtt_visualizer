@@ -57,7 +57,8 @@ def update_info_box(pad, print_status, mqtt_handler, mqtt_storage):
 def update_content_box(pad, mqtt_storage, pad_row_position):
 
     def render_func(text, option = curses.A_NORMAL):
-        pad.addstr(" " + text, option)
+        pad.addstr(" ")
+        pad.addstr(text, option)
 
     pad.erase()
     mqtt_storage.render_formatted_string(render_func, mqtt_storage.data)
