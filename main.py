@@ -39,7 +39,7 @@ def main():
     pad = curses.newpad(10000, curses.COLS - 1)
 
     pad_row_position = 0
-    last_key = -1
+    last_key = ""
 
     print_status = ""
 
@@ -61,45 +61,45 @@ def main():
     
     # key press loop:
     # wait for user input and update the screen
-    while(last_key != ord('q')):
+    while last_key.upper() != 'Q':
         update_screen()
         # after processing key press, resume updates on new data
         mqtt_handler.resume_screen_update()
 
         # wait for key press
-        last_key = pad.getch()
+        last_key = pad.getkey()
 
         # while processing key press, pause updates on new data
         mqtt_handler.pause_screen_update()
 
-        if last_key == ord('k'):
+        if last_key.upper() == 'K':
             if (pad_row_position <= 9995):
                 pad_row_position += 5
             else:
                 pad_row_position = 10000
-        elif last_key == ord('i'):
+        elif last_key.upper() == 'I':
             if (pad_row_position >= 5):
                 pad_row_position -= 5
             else:
                 pad_row_position = 0
-        elif last_key == ord('p'):
+        elif last_key.upper() == 'P':
             print_status = print_string(mqtt_storage.formatted_string(mqtt_storage.data))
             update_info_box(top_pad, print_status, mqtt_handler, mqtt_storage)
-        elif last_key == ord('d'):
+        elif last_key.upper() == 'D':
             mqtt_storage.selection_handler.update_selection("into_tree")
             update_info_box(top_pad, print_status, mqtt_handler, mqtt_storage)
-        elif last_key == ord('s'):
+        elif last_key.upper() == 'S':
             mqtt_storage.selection_handler.update_selection("down")
             update_info_box(top_pad, print_status, mqtt_handler, mqtt_storage)
-        elif last_key == ord('a'):
+        elif last_key.upper() == 'A':
             mqtt_storage.selection_handler.update_selection("to_parent")
             update_info_box(top_pad, print_status, mqtt_handler, mqtt_storage)
-        elif last_key == ord('w'):
+        elif last_key.upper() == 'W':
             mqtt_storage.selection_handler.update_selection("up")
             update_info_box(top_pad, print_status, mqtt_handler, mqtt_storage)
-        elif last_key == ord('c'):
+        elif last_key.upper() == 'C':
             mqtt_storage.selection_handler.collapse()
-        elif last_key == curses.KEY_RESIZE:
+        elif last_key == 'KEY_RESIZE':
             # if terminal window resize was registered
             curses.resize_term(window.getmaxyx()[0], window.getmaxyx()[1])
             top_pad = curses.newpad(8, curses.COLS - 1)
