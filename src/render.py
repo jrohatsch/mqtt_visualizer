@@ -49,9 +49,12 @@ def update_info_box(pad, print_status, mqtt_handler, mqtt_storage):
         pad.box()
         pad.refresh(0, 0, 1, 0, height_info_box, curses.COLS - 1)
     except Exception:
-        pad.clear()
-        pad.addstr(" Terminal window too small for info box.\n Please resize and restart.")
-        pad.refresh(0, 0, 1, 0, height_info_box, curses.COLS - 1)
+        try:
+            pad.clear()
+            pad.addstr(" Terminal window too small for info box.\n Please resize and restart.")
+            pad.refresh(0, 0, 1, 0, height_info_box, curses.COLS - 1)
+        except Exception as e:
+            save_error(e)
 
 
 def update_content_box(pad, mqtt_storage, pad_row_position):

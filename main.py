@@ -99,6 +99,14 @@ def main():
             update_info_box(top_pad, print_status, mqtt_handler, mqtt_storage)
         elif last_key == ord('c'):
             mqtt_storage.selection_handler.collapse()
+        elif last_key == curses.KEY_RESIZE:
+            # if terminal window resize was registered
+            curses.resize_term(window.getmaxyx()[0], window.getmaxyx()[1])
+            top_pad = curses.newpad(8, curses.COLS - 1)
+            pad = curses.newpad(10000, curses.COLS - 1)
+
+            update_info_box(top_pad, print_status, mqtt_handler, mqtt_storage)
+            update_screen()
 
     
     top_pad.clear()
@@ -111,5 +119,5 @@ def main():
 main()
 
 # after main loop on quit or error
-print_errors()
+#print_errors()
 print("program exited")
