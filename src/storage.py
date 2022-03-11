@@ -1,4 +1,5 @@
 import curses
+from src.error_handler import save_error
 from src.selection import SelectionHandler
 from src.deletion_handler import remove_dead_entries
 
@@ -72,7 +73,11 @@ class Storage():
             help = help.get("sub_topics").get(path)
         
         # remove element
-        entry_to_delete = help.get("sub_topics")[path_array[len(path_array) - 1]]
+        try:
+            entry_to_delete = help.get("sub_topics")[path_array[len(path_array) - 1]]
+        except KeyError:
+            save_error("key already deleted " + full_path)
+            return
 
         # check if entry has sub topics
         if len(entry_to_delete.get("sub_topics")) > 0:
