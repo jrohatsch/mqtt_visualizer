@@ -27,6 +27,13 @@ Install following modules
 Make sure there is a mqtt broker running to the connecting machine (for example [mosquitto](https://mosquitto.org/)).
 
 When connecting to a remote computer with -a argument, make sure the specified port is not blocked by a firewall.
+Also the mqtt-broker must allow connections from non-local machines. To enable any machines with mosquitto add these lines
+to the config file:
+
+```
+listener 1883
+allow_anonymous true
+```
 
 ### Starting
 
