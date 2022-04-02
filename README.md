@@ -39,7 +39,7 @@ allow_anonymous true
 
 Run 
 
-```python3 main.py```
+```python3 mqtt_visualizer.py```
 
 to start the program and connect to the local mqtt broker 127.0.0.1.
 
@@ -55,6 +55,7 @@ c    | collapse child topics of selected topic
 i    | scroll screen up
 k    | scroll screen down
 p    | print mqtt data tree to .log file
+e    | publish mqtt data
 
 ### Arguments
 

@@ -17,6 +17,9 @@ class MqttHandler:
     should_loop = False
     pause = True
 
+    def send_data(self, topic: str, value: str, retain: bool):
+        self.client.publish(topic, value, retain=retain)
+
     def pause_screen_update(self):
         self.pause = True
     

@@ -47,6 +47,9 @@ def main():
     top_pad = curses.newpad(8, curses.COLS - 1)
     update_info_box(top_pad, print_status, mqtt_handler, mqtt_storage)
 
+    # init send_data_box
+    send_data_pad = curses.newpad(9, curses.COLS - 1)
+
     # pass update function to mqtt handler
     def update_screen():
         update_content_box(pad, mqtt_storage, pad_row_position)
@@ -99,6 +102,9 @@ def main():
             update_info_box(top_pad, print_status, mqtt_handler, mqtt_storage)
         elif last_key.upper() == 'C':
             mqtt_storage.selection_handler.collapse()
+        elif last_key.upper() == 'E':
+            update_send_data_box(send_data_pad, mqtt_handler, mqtt_storage.selection_handler.get_selected_string())
+            update_info_box(top_pad, print_status, mqtt_handler, mqtt_storage)
         elif last_key == 'KEY_RESIZE':
             # if terminal window resize was registered
             curses.resize_term(window.getmaxyx()[0], window.getmaxyx()[1])
