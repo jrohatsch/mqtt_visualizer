@@ -14,7 +14,6 @@ class MqttHandler:
     update_screen = None
     should_update = False
     render_thread = None
-    should_loop = False
     pause = True
 
     def send_data(self, topic: str, value: str, retain: bool):
@@ -29,20 +28,19 @@ class MqttHandler:
     def start_handling(self):
         self.client.loop_start()
         self.render_thread = threading.Thread(target=self.render_loop)
-        self.should_loop = True
+        self.stop_handling_event = threading.Event()
 
         self.render_thread.start()
     
     def stop_handling(self):
         self.client.loop_stop()
-        self.should_loop = False
-        time.sleep(1)
+        self.stop_handling_event.set()
 
 
     def render_loop(self):
         # update screen every second, if new MQTT messages
         # were recieved in the mean time.
-        while(self.should_loop == True):
+        while(self.stop_handling_event.is_set() == False):
             time.sleep(1)
 
             if(self.should_update and self.pause == False):

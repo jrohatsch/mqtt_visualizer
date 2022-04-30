@@ -82,11 +82,11 @@ def is_valid(key):
     return key in alphabet
 
 def update_send_data_box(pad, mqtt_handler, selected_topic):
-    curses.curs_set(1)
+    curses.curs_set(True)
 
     pad.clear()
     pad.box()
-    pad.addstr(1,1,"Publish data")
+    pad.addstr(1,1,"Publish data", curses.A_BOLD)
     pad.addstr(2,1,"Topic:")
 
     # get topic string
@@ -95,13 +95,13 @@ def update_send_data_box(pad, mqtt_handler, selected_topic):
     last_key = None
     while last_key != '\n':
         filler = ''
-        if last_key != None and ord(last_key) == 127:
+        if last_key != None and (ord(last_key) == 127 or ord(last_key) == 8 or last_key == 'BACKSPACE'):
             topic_string = topic_string[:-1]
             filler = ' '
         elif is_valid(last_key):
             topic_string += last_key
         
-        pad.addstr(3,1,topic_string+filler)
+        pad.addstr(2,8,topic_string+filler)
         pad.refresh(0, 0, 1, 0, height_info_box, curses.COLS - 1)
         try:
             last_key = pad.getkey()
