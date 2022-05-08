@@ -131,5 +131,5 @@ dmypy.json
 # mac specific
 **.DS_Store
 
-# log files
-*.log
+# log files everywhere
+*/*.log

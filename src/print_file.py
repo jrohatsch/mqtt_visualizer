@@ -11,7 +11,7 @@ def print_string(data):
     file_name += ".log"
 
     try:
-        with open(file_name, "w") as f:
+        with open("logs/" + file_name, "w") as f:
             f.write(data)
         
         success = True
@@ -21,7 +21,7 @@ def print_string(data):
 
     
     # check if file was written
-    exists = os.path.exists(file_name)
+    exists = os.path.exists("logs/" + file_name)
 
     if (exists and success):
         return "-> " + file_name

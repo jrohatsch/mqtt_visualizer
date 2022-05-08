@@ -29,11 +29,14 @@ run the image
 
 ```docker run -it --rm mqtt_visualizer```
 
+to use print functionality create a volume for log files
+
+```docker run -v mqtt_logs:/app/logs -ti --rm  mqtt_visualizer```
 
 
 
-## Usage
-### Before Starting
+
+## Before Starting
 
 Make sure there is a mqtt broker running to the connecting machine (for example [mosquitto](https://mosquitto.org/)).
 
@@ -46,11 +49,7 @@ listener 1883
 allow_anonymous true
 ```
 
-### Starting
-
-
-
-### Keyboard Bindings
+## Keyboard Bindings
 
 | key | action |
 ----------|------------|
@@ -64,7 +63,7 @@ k    | scroll screen down
 p    | print mqtt data tree to .log file
 e    | publish mqtt data
 
-### Arguments
+## Arguments
 
 | argument | description | default value
 |----------|------------|---|
