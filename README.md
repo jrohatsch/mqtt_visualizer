@@ -3,7 +3,7 @@ Visualize MQTT data traffic in a terminal.
 
 ![](https://github.com/jrohatsch/media_store/blob/master/mqtt_demo.gif)
 
-## Installation
+## Run the app
 
 ### Unix based systems
 
@@ -13,13 +13,24 @@ Install following modules
 
 ```pip3 install paho-mqtt```
 
-### Windows
+Run 
 
-Use python up to version 3.10.2
+```python3 mqtt_visualizer.py```
 
-Install following modules
+to start the program and connect to the local mqtt broker 127.0.0.1.
 
-```pip3 install paho-mqtt windows-curses```
+### Docker
+
+build the image
+
+```docker build -t mqtt_visualizer .```
+
+run the image
+
+```docker run -it --rm mqtt_visualizer```
+
+
+
 
 ## Usage
 ### Before Starting
@@ -37,11 +48,7 @@ allow_anonymous true
 
 ### Starting
 
-Run 
 
-```python3 mqtt_visualizer.py```
-
-to start the program and connect to the local mqtt broker 127.0.0.1.
 
 ### Keyboard Bindings
 

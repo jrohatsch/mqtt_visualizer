@@ -29,7 +29,10 @@ def main():
     if not success:
         return 0
     
-    window = curses.initscr()
+    try:
+        window = curses.initscr()
+    except Exception:
+        return 0
 
     locale.setlocale(locale.LC_ALL, '')
 
