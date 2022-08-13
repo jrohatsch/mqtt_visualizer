@@ -31,7 +31,11 @@ run the image
 
 to use print functionality create a volume for log files
 
-```docker run -v mqtt_logs:/app/logs -ti --rm  mqtt_visualizer```
+```docker volume create mqtt_logs```
+
+and then
+
+```docker run -v mqtt_logs:/app/logs -it --rm  mqtt_visualizer```
 
 
 
@@ -70,3 +74,14 @@ e    | publish mqtt data
 | -a | ip adress to the MQTT Broker| "127.0.0.1"
 | -p | port number to use | 1883
 | -t | topic to which to subscribe to| "#"
+
+### examples
+
+```python3 mqtt_visualizer.py -a 127.0.0.1 -t main/+/temp```
+
+will connect to localhost on topic main/+/temp.
+
+```docker run -it --mount source=mqtt_logs,target=/app/logs mqtt_visualizer -t main/#```
+
+will connect to host.docker.internal and mounts the volume mqtt_logs for printing on topic main/#.
+

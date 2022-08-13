@@ -16,6 +16,13 @@ def main():
     mqtt_handler = MqttHandler()
     mqtt_handler.add_storage(mqtt_storage)
 
+    # check if app is run through docker
+    if args.docker != None:
+        if(args.docker == True):
+            mqtt_handler.address = "host.docker.internal"
+        else:
+            mqtt_handler.address = "127.0.0.1"
+
     # set address and topic from args 
     if args.address != None:
         mqtt_handler.address = args.address
@@ -105,9 +112,6 @@ def main():
             update_info_box(top_pad, print_status, mqtt_handler, mqtt_storage)
         elif last_key.upper() == 'C':
             mqtt_storage.selection_handler.collapse()
-        elif last_key.upper() == 'E':
-            update_send_data_box(send_data_pad, mqtt_handler, mqtt_storage.selection_handler.get_selected_string())
-            update_info_box(top_pad, print_status, mqtt_handler, mqtt_storage)
         elif last_key == 'KEY_RESIZE':
             # if terminal window resize was registered
             curses.resize_term(window.getmaxyx()[0], window.getmaxyx()[1])
