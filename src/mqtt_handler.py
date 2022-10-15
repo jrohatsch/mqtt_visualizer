@@ -53,7 +53,7 @@ class MqttHandler:
     def on_message_tree(self, client, userdata, message):
         # remove '' and leading b
         # b'True' -> True
-        value = str(message.payload)[2:-1]
+        value = message.payload.decode('utf-8')
 
         if value == "":
             self.storage.delete(message.topic)

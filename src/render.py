@@ -57,11 +57,18 @@ def update_info_box(pad, print_status, mqtt_handler, mqtt_storage):
             save_error(e)
 
 
-def update_content_box(pad, mqtt_storage, pad_row_position):
+def update_content_box(pad, mqtt_storage, pad_row_position, window):
 
-    def render_func(text, option = curses.A_NORMAL):
+    def render_func(text, parent_ref = None, style = curses.A_NORMAL):
         pad.addstr(" ")
-        pad.addstr(text, option)
+        pad.addstr(text, style)
+
+        if(parent_ref != None and 
+            parent_ref.get("sub_topics") != None and 
+            parent_ref.get("sub_topics").get(text) != None):
+            parent_ref.get("sub_topics").get(text)["coordinates"] = pad.getyx()
+
+        
 
     pad.erase()
     mqtt_storage.render_formatted_string(render_func, mqtt_storage.data)

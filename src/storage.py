@@ -115,8 +115,8 @@ class Storage():
 
     def render_formatted_string(self, render_func, data, level = 0):
         if(data.get("value") != ""):
-            render_func(" = ", curses.A_BOLD)
-            render_func(data.get("value"))
+            render_func(text=" = ", parent_ref=data.get("parent_ref"), style=curses.A_BOLD)
+            render_func(text=data.get("value"),parent_ref=data.get("parent_ref"))
         
         # check if data has sub_topics
         if (len(data.get("sub_topics")) > 0 and data.get("show_sub_topics") == False):
@@ -137,7 +137,7 @@ class Storage():
                 if(value.get("selected") == True):
                     style = curses.A_STANDOUT
 
-                render_func(key, style)
+                render_func(text=key, style=style, parent_ref=value.get("parent_ref"))
 
                 self.render_formatted_string(render_func, value, level + 1)
     

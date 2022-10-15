@@ -62,7 +62,7 @@ def main():
 
     # pass update function to mqtt handler
     def update_screen():
-        update_content_box(pad, mqtt_storage, pad_row_position)
+        update_content_box(pad, mqtt_storage, pad_row_position, window)
     
     mqtt_handler.update_screen = update_screen
 
@@ -71,6 +71,11 @@ def main():
     # to ensure screen is only updated when
     # new data arrives
     mqtt_handler.start_handling()
+
+    #window.move(10,10)
+    def update_scroll(pad_row_position):
+        if(mqtt_storage.selection_handler.get_selected_ref().get("coordinates") != None):
+            pad_row_position = mqtt_storage.selection_handler.get_selected_ref().get("coordinates")[0]
     
     # key press loop:
     # wait for user input and update the screen
@@ -85,30 +90,23 @@ def main():
         # while processing key press, pause updates on new data
         mqtt_handler.pause_screen_update()
 
-        if last_key.upper() == 'K':
-            if (pad_row_position <= 9995):
-                pad_row_position += 5
-            else:
-                pad_row_position = 10000
-        elif last_key.upper() == 'I':
-            if (pad_row_position >= 5):
-                pad_row_position -= 5
-            else:
-                pad_row_position = 0
-        elif last_key.upper() == 'P':
-            print_status = print_string(mqtt_storage.formatted_string(mqtt_storage.data))
-            update_info_box(top_pad, print_status, mqtt_handler, mqtt_storage)
-        elif last_key.upper() == 'D':
+        if last_key.upper() == 'D':
             mqtt_storage.selection_handler.update_selection("into_tree")
             update_info_box(top_pad, print_status, mqtt_handler, mqtt_storage)
         elif last_key.upper() == 'S':
             mqtt_storage.selection_handler.update_selection("down")
+            if(mqtt_storage.selection_handler.get_selected_ref().get("coordinates") != None):
+                pad_row_position = mqtt_storage.selection_handler.get_selected_ref().get("coordinates")[0]
             update_info_box(top_pad, print_status, mqtt_handler, mqtt_storage)
         elif last_key.upper() == 'A':
             mqtt_storage.selection_handler.update_selection("to_parent")
+            if(mqtt_storage.selection_handler.get_selected_ref().get("coordinates") != None):
+                pad_row_position = mqtt_storage.selection_handler.get_selected_ref().get("coordinates")[0]
             update_info_box(top_pad, print_status, mqtt_handler, mqtt_storage)
         elif last_key.upper() == 'W':
             mqtt_storage.selection_handler.update_selection("up")
+            if(mqtt_storage.selection_handler.get_selected_ref().get("coordinates") != None):
+                pad_row_position = mqtt_storage.selection_handler.get_selected_ref().get("coordinates")[0]
             update_info_box(top_pad, print_status, mqtt_handler, mqtt_storage)
         elif last_key.upper() == 'C':
             mqtt_storage.selection_handler.collapse()

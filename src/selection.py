@@ -45,11 +45,11 @@ class SelectionHandler():
         if delta > 0:
             # check if index is at end
             if(selected_topic_index == len(sub_topics) - 1):
-                sister_index = 0
+                return
         else:
             # check if index is at start
             if(selected_topic_index == 0):
-                sister_index = len(sub_topics) - 1
+                return
 
         sister = sub_topics[sister_index]
 
