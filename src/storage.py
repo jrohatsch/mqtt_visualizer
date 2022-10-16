@@ -28,8 +28,9 @@ class Storage():
             # create subpath to topic
             sub_path = ""
             for j in range(i + 1):
+                if(sub_path != ""):
+                    sub_path += "/"
                 sub_path += path_array[j]
-                sub_path += "/"
 
             # create empty dictionary
             if not path in help:

@@ -10,7 +10,7 @@ def render_key_info(pad, key: str, info: str):
     pad.addstr("  ")
 
 
-def update_info_box(pad, print_status, mqtt_handler, mqtt_storage):
+def update_info_box(pad, mqtt_handler, mqtt_storage):
     try:
         pad.erase()
 
@@ -32,17 +32,9 @@ def update_info_box(pad, print_status, mqtt_handler, mqtt_storage):
 
         # line 3
         pad.addstr(" ")
-        render_key_info(pad, "I", "Scroll Up")
-        render_key_info(pad, "K", "Scroll Down")
-        render_key_info(pad, "P", "Print")
-        pad.addstr(print_status)
-        pad.addstr("\n\n")
-
-        # line 4
-        pad.addstr(" ")
         pad.addstr("connected to: " + mqtt_handler.address + ":" + str(mqtt_handler.port) + "\n", curses.A_BOLD)
 
-        # line 5
+        # line 4
         pad.addstr(" ")
         pad.addstr("selected topic: " + mqtt_storage.selection_handler.get_selected_string() + "\n", curses.A_BOLD)
 
@@ -57,7 +49,7 @@ def update_info_box(pad, print_status, mqtt_handler, mqtt_storage):
             save_error(e)
 
 
-def update_content_box(pad, mqtt_storage, pad_row_position, window):
+def update_content_box(pad, mqtt_storage, pad_row_position):
 
     def render_func(text, parent_ref = None, style = curses.A_NORMAL):
         pad.addstr(" ")
