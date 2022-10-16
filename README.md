@@ -62,10 +62,6 @@ s    | move selection to topic below
 a    | move selection to parent topic
 d    | move selection to child topics
 c    | collapse child topics of selected topic
-i    | scroll screen up
-k    | scroll screen down
-p    | print mqtt data tree to .log file
-e    | publish mqtt data
 
 ## Arguments
 
