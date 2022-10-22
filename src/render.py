@@ -1,7 +1,7 @@
 import curses
 from src.error_handler import *
 
-height_info_box = 6
+height_info_box = 5
 
 def render_key_info(pad, key: str, info: str):
     pad.addstr(" " + key + " ", curses.A_STANDOUT)
@@ -9,6 +9,17 @@ def render_key_info(pad, key: str, info: str):
     pad.addstr(info)
     pad.addstr("  ")
 
+def update_bottom_pad(pad):
+    pad.clear()
+
+    render_key_info(pad, "Q", "Close")
+    render_key_info(pad, "W/A/S/D", "Move Selection")
+    render_key_info(pad, "C", "Collapse Tree")
+
+    try:
+        pad.refresh(0,0, curses.LINES - 1, 0 , curses.LINES, curses.COLS)
+    except Exception as e:
+        save_error(e)
 
 def update_info_box(pad, mqtt_handler, mqtt_storage):
     try:
@@ -18,30 +29,23 @@ def update_info_box(pad, mqtt_handler, mqtt_storage):
 
         # line 1
         pad.addstr(" ")
-        render_key_info(pad, "Q", "Close")
-        render_key_info(pad, "W/A/S/D", "Move Select ")
-        render_key_info(pad, "C", "Collapse Tree")
-        pad.addstr("\n")
+        pad.addstr("connected to: " + mqtt_handler.address + ":" + str(mqtt_handler.port) + "\n", curses.A_BOLD)
 
         # line 2
         pad.addstr(" ")
-        pad.addstr("connected to: " + mqtt_handler.address + ":" + str(mqtt_handler.port) + "\n", curses.A_BOLD)
-
-        # line 3
-        pad.addstr(" ")
         pad.addstr("selected topic: " + mqtt_storage.selection_handler.get_selected_string() + "\n", curses.A_BOLD)
 
-        # line 4
+        # line 3
         pad.addstr(" ")
         pad.addstr("last update: " + mqtt_storage.selection_handler.get_selected_time() + "\n", curses.A_BOLD)
 
         pad.box()
-        pad.refresh(0, 0, 1, 0, height_info_box, curses.COLS - 1)
+        pad.refresh(0, 0, 0, 0, height_info_box, curses.COLS)
     except Exception:
         try:
             pad.clear()
             pad.addstr(" Terminal window too small for info box.\n Please resize and restart.")
-            pad.refresh(0, 0, 1, 0, height_info_box, curses.COLS - 1)
+            pad.refresh(0, 0, 1, 0, height_info_box, curses.COLS)
         except Exception as e:
             save_error(e)
 
@@ -64,7 +68,7 @@ def update_content_box(pad, mqtt_storage, pad_row_position):
 
     try:
         #pad.box()
-        pad.refresh(pad_row_position, 0, height_info_box, 0, curses.LINES - 1, curses.COLS - 1)
+        pad.refresh(pad_row_position, 0, height_info_box, 0, curses.LINES - 2, curses.COLS)
     except Exception as e:
         save_error(e)
 

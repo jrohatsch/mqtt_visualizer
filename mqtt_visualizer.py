@@ -34,14 +34,19 @@ def main(window):
     # make cursor invisible
     curses.curs_set(0)
 
-    pad = curses.newpad(10000, curses.COLS - 1)
+    pad = curses.newpad(10000, curses.COLS)
 
     pad_row_position = 0
     last_key = ""
 
     # add top section
-    top_pad = curses.newpad(6, curses.COLS - 1)
+    top_pad = curses.newpad(height_info_box, curses.COLS)
     update_info_box(top_pad, mqtt_handler, mqtt_storage)
+
+    # add bottom section
+    bottom_pad = curses.newpad(1, curses.COLS)
+
+    update_bottom_pad(bottom_pad)
 
     # pass update function to mqtt handler
     def update_screen():
@@ -92,11 +97,12 @@ def main(window):
         elif last_key == 'KEY_RESIZE':
             # if terminal window resize was registered
             curses.resize_term(window.getmaxyx()[0], window.getmaxyx()[1])
-            top_pad = curses.newpad(8, curses.COLS - 1)
-            pad = curses.newpad(10000, curses.COLS - 1)
+            top_pad = curses.newpad(8, curses.COLS)
+            pad = curses.newpad(10000, curses.COLS)
 
             update_info_box(top_pad, mqtt_handler, mqtt_storage)
             update_screen()
+            update_bottom_pad(bottom_pad)
 
     # exit the app
     top_pad.clear()
