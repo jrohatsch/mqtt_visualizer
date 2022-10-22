@@ -1,4 +1,5 @@
 import curses
+import time
 from src.error_handler import save_error
 from src.selection import SelectionHandler
 from src.deletion_handler import remove_dead_entries
@@ -10,7 +11,8 @@ class Storage():
         "show_sub_topics": True,
         "selected": False,
         "parent_ref": None,
-        "path": "#"
+        "path": "#",
+        "date": None,
     }
 
     selection_handler = SelectionHandler()
@@ -40,12 +42,14 @@ class Storage():
                     "show_sub_topics": False,
                     "selected": False,
                     "parent_ref": parent,
-                    "path": sub_path
+                    "path": sub_path,
+                    "date": time.time()
                 }
 
             # set value
             if(i == len(path_array) - 1):
                 help[path]["value"] = value
+                help[path]["date"] = time.time()
 
             parent = help[path]
             help = help[path]["sub_topics"]

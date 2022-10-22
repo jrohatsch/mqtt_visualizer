@@ -1,3 +1,4 @@
+from datetime import datetime
 
 class SelectionHandler():
     __ref_selected_topic = None
@@ -13,6 +14,12 @@ class SelectionHandler():
             return ""
         else:
             return self.__ref_selected_topic.get("path")
+    
+    def get_selected_time(self):
+        if(self.__ref_selected_topic == None):
+            return ""
+        else:
+            return datetime.utcfromtimestamp(self.__ref_selected_topic.get("date")).strftime('%Y-%m-%d %H:%M:%S UTC')
 
 
     def set_selection_to_parent(self):

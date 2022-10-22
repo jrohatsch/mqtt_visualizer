@@ -40,12 +40,13 @@ def main(window):
     last_key = ""
 
     # add top section
-    top_pad = curses.newpad(8, curses.COLS - 1)
+    top_pad = curses.newpad(6, curses.COLS - 1)
     update_info_box(top_pad, mqtt_handler, mqtt_storage)
 
     # pass update function to mqtt handler
     def update_screen():
         update_content_box(pad, mqtt_storage, pad_row_position)
+        update_info_box(top_pad,mqtt_handler,mqtt_storage)
     
     mqtt_handler.update_screen = update_screen
 
@@ -83,7 +84,7 @@ def main(window):
             
             # scroll if selection is in bottom half of terminal screen
             if(mqtt_storage.selection_handler.get_selected_ref() != None and mqtt_storage.selection_handler.get_selected_ref().get("coordinates") != None):
-                pad_row_position = mqtt_storage.selection_handler.get_selected_ref().get("coordinates")[0] - (curses.LINES // 2)
+                pad_row_position = mqtt_storage.selection_handler.get_selected_ref().get("coordinates")[0] - ((curses.LINES - height_info_box) // 2)
             
             update_info_box(top_pad, mqtt_handler, mqtt_storage)
         elif last_key.upper() == 'C':
