@@ -15,13 +15,13 @@ def main(window):
     mqtt_handler = MqttHandler()
     mqtt_handler.add_storage(mqtt_storage)
 
-    # set address and topic from args 
+    # set address and topic from args
     mqtt_handler.address = args.address
     mqtt_handler.topic = args.topic
     mqtt_handler.port = args.port
 
     # if app is run through docker replace localhost
-    if(args.docker == True and args.address == "127.0.0.1"):
+    if (args.docker == True and args.address == "127.0.0.1"):
         mqtt_handler.address = "host.docker.internal"
 
     success = mqtt_handler.init()
@@ -34,25 +34,22 @@ def main(window):
     # make cursor invisible
     curses.curs_set(0)
 
-    pad = curses.newpad(10000, curses.COLS)
-
     pad_row_position = 0
     last_key = ""
 
-    # add top section
-    top_pad = curses.newpad(height_info_box, curses.COLS)
-    update_info_box(top_pad, mqtt_handler, mqtt_storage)
-
-    # add bottom section
+    # create pads (sections of the screen)
+    top_pad = init_top_pad()
+    middle_pad = init_middle_pad()
     bottom_pad = curses.newpad(1, curses.COLS)
 
+    update_info_box(top_pad, mqtt_handler, mqtt_storage)
     update_bottom_pad(bottom_pad)
 
     # pass update function to mqtt handler
     def update_screen():
-        update_content_box(pad, mqtt_storage, pad_row_position)
-        update_info_box(top_pad,mqtt_handler,mqtt_storage)
-    
+        update_content_box(middle_pad, mqtt_storage, pad_row_position)
+        update_info_box(top_pad, mqtt_handler, mqtt_storage)
+
     mqtt_handler.update_screen = update_screen
 
     # mqtt loop:
@@ -60,7 +57,7 @@ def main(window):
     # to ensure screen is only updated when
     # new data arrives
     mqtt_handler.start_handling()
-    
+
     # key press loop:
     # wait for user input and update the screen
     while last_key.upper() != 'Q':
@@ -70,7 +67,7 @@ def main(window):
 
         try:
             # wait for key press
-            last_key = pad.getkey()
+            last_key = middle_pad.getkey()
         except KeyboardInterrupt:
             pass
 
@@ -86,19 +83,21 @@ def main(window):
                 mqtt_storage.selection_handler.update_selection("to_parent")
             elif last_key.upper() == 'W':
                 mqtt_storage.selection_handler.update_selection("up")
-            
+
             # scroll if selection is in bottom half of terminal screen
-            if(mqtt_storage.selection_handler.get_selected_ref() != None and mqtt_storage.selection_handler.get_selected_ref().get("coordinates") != None):
-                pad_row_position = mqtt_storage.selection_handler.get_selected_ref().get("coordinates")[0] - ((curses.LINES - height_info_box) // 2)
-            
+            if (mqtt_storage.selection_handler.get_selected_ref() != None and mqtt_storage.selection_handler.get_selected_ref().get("coordinates") != None):
+                pad_row_position = mqtt_storage.selection_handler.get_selected_ref().get(
+                    "coordinates")[0] - ((curses.LINES - height_info_box) // 2)
+
             update_info_box(top_pad, mqtt_handler, mqtt_storage)
         elif last_key.upper() == 'C':
             mqtt_storage.selection_handler.collapse()
         elif last_key == 'KEY_RESIZE':
             # if terminal window resize was registered
             curses.resize_term(window.getmaxyx()[0], window.getmaxyx()[1])
-            top_pad = curses.newpad(8, curses.COLS)
-            pad = curses.newpad(10000, curses.COLS)
+            top_pad = curses.newpad(height_info_box, curses.COLS)
+            middle_pad = curses.newpad(10000, curses.COLS)
+            bottom_pad = curses.newpad(1, curses.COLS)
 
             update_info_box(top_pad, mqtt_handler, mqtt_storage)
             update_screen()
@@ -106,10 +105,10 @@ def main(window):
 
     # exit the app
     top_pad.clear()
-    pad.clear()
+    middle_pad.clear()
     mqtt_handler.stop_handling()
     mqtt_handler.destroy()
     curses.endwin()
 
-
+# run the app
 curses.wrapper(main)

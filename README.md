@@ -29,16 +29,6 @@ run the image
 
 ```docker run -it --rm mqtt_visualizer```
 
-to use print functionality create a volume for log files
-
-```docker volume create mqtt_logs```
-
-and then
-
-```docker run -v mqtt_logs:/app/logs -it --rm  mqtt_visualizer```
-
-
-
 
 ## Before Starting
 
@@ -57,9 +47,10 @@ allow_anonymous true
 
 | key | action |
 ----------|------------|
+q    | quit the app
 w    | move selection to topic above
-s    | move selection to topic below
 a    | move selection to parent topic
+s    | move selection to topic below
 d    | move selection to child topics
 c    | collapse child topics of selected topic
 
@@ -76,8 +67,4 @@ c    | collapse child topics of selected topic
 ```python3 mqtt_visualizer.py -a 127.0.0.1 -t main/+/temp```
 
 will connect to localhost on topic main/+/temp.
-
-```docker run -it --mount source=mqtt_logs,target=/app/logs mqtt_visualizer -t main/#```
-
-will connect to host.docker.internal and mounts the volume mqtt_logs for printing on topic main/#.
 

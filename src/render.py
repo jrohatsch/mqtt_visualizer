@@ -3,16 +3,29 @@ from src.error_handler import *
 
 height_info_box = 5
 
+def init_top_pad():
+    return curses.newpad(height_info_box, curses.COLS)
+
+def init_middle_pad():
+    return curses.newpad(10000, curses.COLS)
+
+def init_bottom_pad():
+    return curses.newpad(1, curses.COLS)
+
 def render_key_info(pad, key: str, info: str):
-    pad.addstr(" " + key + " ", curses.A_STANDOUT)
-    pad.addstr(" ")
-    pad.addstr(info)
-    pad.addstr("  ")
+    try:
+        pad.addstr(" " + key + " ", curses.A_STANDOUT)
+        pad.addstr(" ")
+        pad.addstr(info)
+        pad.addstr("  ")
+    except Exception as e:
+        pad.clear()
+        save_error(e)
 
 def update_bottom_pad(pad):
     pad.clear()
 
-    render_key_info(pad, "Q", "Close")
+    render_key_info(pad, "Q", "Quit")
     render_key_info(pad, "W/A/S/D", "Move Selection")
     render_key_info(pad, "C", "Collapse Tree")
 
@@ -71,14 +84,5 @@ def update_content_box(pad, mqtt_storage, pad_row_position):
         pad.refresh(pad_row_position, 0, height_info_box, 0, curses.LINES - 2, curses.COLS)
     except Exception as e:
         save_error(e)
-
-def is_valid(key):
-    if key == None:
-        return False
-
-    alphabet = "abcdefghijklmnopqrstuvwxyzäöü/_-0123456789"
-
-    return key in alphabet
-    
 
 
