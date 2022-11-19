@@ -30,6 +30,10 @@ run the image
 ```docker run -it --rm mqtt_visualizer```
 
 
+## Packaged builds
+
+
+
 ## Before Starting
 
 Make sure there is a mqtt broker running to the connecting machine (for example [mosquitto](https://mosquitto.org/)).

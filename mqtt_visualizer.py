@@ -6,8 +6,12 @@ from src.error_handler import *
 import src.arguments as arguments
 from src.render import *
 
+mqtt_storage=None
+mqtt_handler=None
 
-def main(window):
+'''init to set up backend, returns succesful boolean'''
+def init() -> bool:
+    global mqtt_storage, mqtt_handler
     # read arguments
     args = arguments.get()
 
@@ -24,11 +28,9 @@ def main(window):
     if (args.docker == True and args.address == "127.0.0.1"):
         mqtt_handler.address = "host.docker.internal"
 
-    success = mqtt_handler.init()
+    return mqtt_handler.init()
 
-    if not success:
-        return 0
-
+def main(window):
     locale.setlocale(locale.LC_ALL, '')
 
     # make cursor invisible
@@ -110,5 +112,8 @@ def main(window):
     mqtt_handler.destroy()
     curses.endwin()
 
-# run the app
-curses.wrapper(main)
+if init():
+    # run the app
+    curses.wrapper(main)
+else:
+    print("Could not connect to MQTT Broker on " + arguments.get().address)

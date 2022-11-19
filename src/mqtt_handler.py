@@ -69,7 +69,7 @@ class MqttHandler:
     def init(self):
         try:
             self.client.connect(self.address, self.port)
-        except ConnectionRefusedError:
+        except Exception:
             self.failed_connect()
             return False
             
