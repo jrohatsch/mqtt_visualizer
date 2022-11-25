@@ -32,7 +32,11 @@ run the image
 
 ## Packaged builds
 [macOS](https://github.com/jrohatsch/mqtt_visualizer/blob/main/builds/macOS-12.6-arm64.zip)
+
 [Linux](https://github.com/jrohatsch/mqtt_visualizer/blob/main/builds/Linux.zip)
+
+<!--latest working version: commit 4c49be6-->
+[Windows](https://github.com/jrohatsch/mqtt_visualizer/blob/main/builds/Windows.zip)
 
 ## Before Starting
 
